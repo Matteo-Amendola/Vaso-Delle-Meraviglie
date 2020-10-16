@@ -23,7 +23,7 @@ byte newChar[8] = {
 };
 
 void setup() {
-  Serial.begin(9600);
+  //Serial.begin(9600);
   // analogReference(EXTERNAL); // indichiamo al converrtitore AD che deve impiegare la tensione su AREF come valore di riferimento per la conversione
   lcd.createChar(0, newChar);
   lcd.begin(16, 2); // impostiamo numero di colonne e righe
@@ -32,22 +32,15 @@ void setup() {
 }
 
 void loop() {
-  CIAONE();
-  temperatura(dht.readTemperature());
-  umidita(dht.readHumidity());
-  luminosita();
+  int t = dht.readTemperature();
+  int u = dht.readHumidity();
   
-}
-void CIAONE(){
   lcd.print("CIAONE!");
   
   delay(3000);
   lcd.clear();
   delay(300);
-}
-
-
-int temperatura(int t){ 
+  
   lcd.print("Temperatura : ");
   lcd.setCursor(0, 1);
   lcd.print(t);
@@ -57,9 +50,7 @@ int temperatura(int t){
   delay(5000);
   lcd.clear();
   delay(300);
-}
 
-int umidita(int u){
   lcd.print("Umidita' : ");
   lcd.setCursor(0, 1);
   lcd.print(u);
@@ -68,16 +59,13 @@ int umidita(int u){
   delay(5000);
   lcd.clear();
   delay(300);
-}
 
-int luminosita(){
-  int V = analogRead(fotoR);
-  int L = V/100;  
-  Serial.println(V);  
+  //  valore_fotoR = analogRead(fotoR);
+  //Serial.println(analogRead(fotoR));
   lcd.print("Luminosita' : ");
   lcd.setCursor(0, 1);
-  lcd.print(L);
-  lcd.print(" Lux");
+  lcd.print(analogRead(fotoR));
+  lcd.print(" Ohm");
 
   delay(5000);
   lcd.clear();
