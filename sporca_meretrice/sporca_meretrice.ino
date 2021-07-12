@@ -4,7 +4,10 @@
 #define DHTPIN 8
 #define DHTTYPE DHT11
 
-int fotoR = A0;
+const int min_dracworm = 275;
+const int max_dracworm = 1023;  
+
+int fotoR = A2;
 int valore_fotoR = 0;
 
 DHT dht(DHTPIN, DHTTYPE);
@@ -29,26 +32,40 @@ void setup() {
   lcd.begin(16, 2); // impostiamo numero di colonne e righe
   dht.begin();
   pinMode(fotoR, INPUT);
+  pinMode(A0, INPUT);
 }
 
 void loop() {
   CIAONE();
+  luminosita();
   temperatura(dht.readTemperature());
   umidita(dht.readHumidity());
-  luminosita();
-  
+  dracworm();
 }
 void CIAONE(){
   lcd.print("CIAONE!");
-  
+
   delay(3000);
   lcd.clear();
   delay(300);
 }
 
+int luminosita(){
+  int V = analogRead(fotoR);
+  int L = V/100;
+  Serial.println(V);
+  lcd.print("Luminosita':");
+  lcd.setCursor(0, 1);
+  lcd.print(L);
+  lcd.print(" Lux");
+
+  delay(5000);
+  lcd.clear();
+  delay(300);
+}
 
 int temperatura(int t){ 
-  lcd.print("Temperatura : ");
+  lcd.print("Temperatura:");
   lcd.setCursor(0, 1);
   lcd.print(t);
   lcd.write((int)0);
@@ -60,24 +77,24 @@ int temperatura(int t){
 }
 
 int umidita(int u){
-  lcd.print("Umidita' : ");
+  lcd.print("Umidita':");
   lcd.setCursor(0, 1);
   lcd.print(u);
-  lcd.print("%");
+  lcd.print(" %");
 
   delay(5000);
   lcd.clear();
   delay(300);
 }
 
-int luminosita(){
-  int V = analogRead(fotoR);
-  int L = V/100;  
-  Serial.println(V);  
-  lcd.print("Luminosita' : ");
+int dracworm(){
+  int dracworm = analogRead(A0);
+  int ut = map(dracworm, min_dracworm, max_dracworm, 100, 0);
+  ut = constrain(ut, 0, 100),
+  lcd.print("Umidita'terreno:");
   lcd.setCursor(0, 1);
-  lcd.print(L);
-  lcd.print(" Lux");
+  lcd.print(ut);
+  lcd.print(" %");
 
   delay(5000);
   lcd.clear();
